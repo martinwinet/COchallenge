@@ -27,7 +27,7 @@ class GreeterServiceImpl final : public CabonlineChallenge::Service
     // connect to database
     pqxx::connection C("dbname = challengeDB " 
                        "user = postgres " 
-                       "password = Ne0wvb12 " 
+                       "password = 1234 " 
                        "hostaddr = 127.0.0.1 " 
                        "port = 5432");
     
