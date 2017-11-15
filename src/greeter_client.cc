@@ -57,23 +57,13 @@ class GreeterClient {
 };
 
 
-int main(int argc, char** argv) {
-
-  // instantiate client
-  GreeterClient greeter(grpc::CreateChannel("localhost:50051", 
-                                            grpc::InsecureChannelCredentials()));
-
+void queryDB(GreeterClient& greeter, int msgFlag=2, std::string driver="", std::string car="")
+{
   // define json message 
-  // (could also load it from a .json file)
   nlohmann::json message;
-/*  message["msgFlag"] = 2; // 1: new entry for database, 2: request database as JSON, 
-  message["dbEntry"] = {{"driver",   "kevin" }, 
-                        {"car",      "audiS3"}};
-*/
-
-  message["msgFlag"] = 1; // 1: new entry for database, 2: request database as JSON, 
-  message["dbEntry"] = {{"driver",   "felix" }, 
-                        {"car",      "fabia"}};
+  message["msgFlag"] = msgFlag; // 1: new entry for database, 2: request database as JSON
+  message["dbEntry"] = {{"driver",   driver }, 
+                        {"car",      car    }};
 
   // serialize
   std::string messageString = message.dump();
@@ -93,9 +83,25 @@ int main(int argc, char** argv) {
   }
   catch(const std::exception &e)
   {
-    // print error message from server
-    std::cout << reply << std::endl;
+    // print message from server
+    std::cout << std::endl << reply << std::endl;
   }
+}
 
+
+int main(int argc, char** argv) {
+
+  // instantiate client
+  GreeterClient greeter(grpc::CreateChannel("localhost:50051", 
+                                            grpc::InsecureChannelCredentials()));
+  // request DB content
+  queryDB(greeter, 2);
+
+  // new DB entry
+  queryDB(greeter, 1, "martin", "volvo940");
+
+  // request DB content
+  queryDB(greeter, 2);
+ 
   return 0;
 }
